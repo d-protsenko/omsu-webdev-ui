@@ -9,13 +9,11 @@ import Button from "src/elements/components/buttons/button/Button";
 
 interface ExampleProps {
     data: string;
-    changeData: (name: string) => BaseAction;
-    fetchData: () => BaseAction;
+    changeData: (data) => BaseAction;
+    fetchData: ({min, max, count}) => BaseAction;
 }
 
 const Example: React.FC<ExampleProps> = props => {
-    const changeData = (e: React.ChangeEvent<HTMLInputElement>) =>
-        props.changeData(e.target.value);
     return (
         <>
             <h2>Template component ({props.data})</h2>
@@ -24,15 +22,14 @@ const Example: React.FC<ExampleProps> = props => {
                 width: 'max-content',
                 alignContent: 'center'
             }}>
-                <input onChange={changeData} value={props.data}/>
-                <Button title='Fetch data' onClick={props.fetchData}/>
+                <Button title='Fetch data' onClick={() => props.fetchData({min: 0, max: 10, count: 1})}/>
             </div>
         </>
     );
 };
 
 const mapStateToProps = (state: AppState) => ({
-    data: state.exampleReducer.data,
+    data: state.exampleReducer.data
 });
 
 const mapDispatchToProps = {

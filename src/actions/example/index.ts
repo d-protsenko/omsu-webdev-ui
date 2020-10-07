@@ -1,11 +1,12 @@
-import { BaseAction } from '../BaseAction';
-import { actionTypes as types } from './actionTypes';
+import {BaseAction} from '../BaseAction';
+import {actionTypes as types} from './actionTypes';
 
-export const changeData = (data: string): BaseAction => ({
+export const changeData = (data): BaseAction => ({
     type: types.CHANGE_DATA,
-    payload: { data },
+    payload: {data},
 });
 
-export const fetchData = (): BaseAction => ({
+export const fetchData = ({min, max, count}): BaseAction => ({
     type: types.FETCH_DATA,
+    payload: {min, max, count}
 });

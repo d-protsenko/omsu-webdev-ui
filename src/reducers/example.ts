@@ -6,7 +6,7 @@ export interface ExampleStore {
 }
 
 const initialState: ExampleStore = {
-    data: 'Example data',
+    data: 'initial cpu state'
 };
 
 export default function(
@@ -17,7 +17,12 @@ export default function(
         case types.CHANGE_DATA: {
             return {
                 ...state,
-                data: action.payload.data,
+                data: 'current core temperature is ' + action.payload.data.core
+            };
+        }
+        case types.FETCH_DATA: {
+            return {
+                ...state
             };
         }
         default:
