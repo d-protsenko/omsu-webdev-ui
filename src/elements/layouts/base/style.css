@@ -1,0 +1,12 @@
+body {
+  background-color: #f5f6f8;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.app__main {
+  box-sizing: border-box;
+  padding: 35px;
+}

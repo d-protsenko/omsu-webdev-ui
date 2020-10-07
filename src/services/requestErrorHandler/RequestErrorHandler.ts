@@ -1,5 +1,5 @@
-import history from '../../history/history';
-import routes from '../../routes/routes';
+import history from 'src/history/history';
+import routes from 'src/routes/routes';
 
 type ErrorHandlers = {
     [key: number]: any,
