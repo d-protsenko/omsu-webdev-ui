@@ -1,6 +1,6 @@
 import { env } from 'process';
-import BaseError from '../../baseError/BaseError';
-import errorhandler from '../../services/requestErrorHandler/RequestErrorHandler';
+import BaseError from 'src/baseError/BaseError';
+import errorhandler from 'src/services/requestErrorHandler/RequestErrorHandler';
 
 import getPreparedBody from './getPreparedBody';
 import getPreparedHeaders from './getPreparedHeaders';
