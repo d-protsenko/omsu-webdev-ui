@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
 
 import './style.css';
+import Clock from "src/elements/components/clock/Clock";
 
 export interface Props {
   className?: string;
@@ -33,6 +34,7 @@ const Header: React.FC<Props> = ({ className }) => {
     <header className={classNames('header', className)}>
       <nav className='header__nav nav'>
       </nav>
+      <Clock/>
     </header>
   );
 };

@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Switch, Route, Redirect} from 'react-router-dom';
 import {Provider} from 'react-redux';
+import {MuiPickersUtilsProvider} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
 import * as serviceWorker from './serviceWorker';
 import App from 'src/elements/pages/app/App';
 import BaseLayout from 'src/elements/layouts/base/BaseLayout';
@@ -23,18 +26,20 @@ const RouteWithLayout = ({layout: Layout, component: Component, ...rest}) => (
     />
 );
 ReactDOM.render(
-    <Provider store={store}>
-        <Router history={history}>
-            <Switch>
-                <RouteWithLayout
-                    exact
-                    path={routes.main}
-                    layout={BaseLayout}
-                    component={App}
-                />
-            </Switch>
-        </Router>
-    </Provider>,
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Provider store={store}>
+            <Router history={history}>
+                <Switch>
+                    <RouteWithLayout
+                        exact
+                        path={routes.main}
+                        layout={BaseLayout}
+                        component={App}
+                    />
+                </Switch>
+            </Router>
+        </Provider>
+    </MuiPickersUtilsProvider>,
     document.getElementById('root')
 );
 
