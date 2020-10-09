@@ -1,17 +1,17 @@
 .action-view {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 
-  cursor: pointer;
+    cursor: pointer;
 
-  color: #000;
-  border: none;
-  background-color: initial;
+    color: #000;
+    border: none;
+    background-color: initial;
 }
 
 .action-view:disabled {
-  pointer-events: none;
+    pointer-events: none;
 
-  opacity: 0.3;
+    opacity: 0.3;
 }

@@ -1,5 +1,6 @@
 class BaseError extends Error {
   metaInfo: object;
+
   constructor(metaInfo: object, ...args: any) {
     super(args);
     this.metaInfo = metaInfo;

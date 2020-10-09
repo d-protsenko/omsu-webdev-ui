@@ -1,9 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import ActionView, {
-  ActionViewProps,
-} from 'src/elements/atoms/actionView/ActionView';
+import ActionView, { ActionViewProps } from 'src/elements/atoms/actionView/ActionView';
 
 import './style.css';
 
@@ -45,14 +43,7 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <ActionView
-      className={classNames(
-        'button',
-        { [`button_color_${color}`]: color },
-        className
-      )}
-      {...other}
-    >
+    <ActionView className={classNames('button', { [`button_color_${color}`]: color }, className)} {...other}>
       {renderLeftIcon()}
       {renderTitle()}
       {renderRightIcon()}

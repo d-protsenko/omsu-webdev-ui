@@ -21,13 +21,11 @@ history.listen((location: any) => {
 });
 
 history.push = (path: string | History, state?: any) => {
-  const pathname =
-    typeof path !== 'string' ? path.pathname + path.search + path.hash : path;
+  const pathname = typeof path !== 'string' ? path.pathname + path.search + path.hash : path;
   state = typeof path !== 'string' ? path.state : state;
 
   if (
-    pathname !==
-      lastLocation.pathname + lastLocation.search + lastLocation.hash ||
+    pathname !== lastLocation.pathname + lastLocation.search + lastLocation.hash ||
     JSON.stringify(state || {}) !== JSON.stringify(lastLocation.state || {})
   ) {
     prevHistoryPush(path, state || {});

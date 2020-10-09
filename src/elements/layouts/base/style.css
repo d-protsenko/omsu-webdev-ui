@@ -1,13 +1,13 @@
 body {
-  background-color: #f5f6f8;
+    background-color: #f5f6f8;
 }
 
 .app {
-  font-family: Roboto, sans-serif;
-  min-height: 100vh;
+    font-family: Roboto, sans-serif;
+    min-height: 100vh;
 }
 
 .app__main {
-  box-sizing: border-box;
-  padding: 35px;
+    box-sizing: border-box;
+    padding: 35px;
 }
