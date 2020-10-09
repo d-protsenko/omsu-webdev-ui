@@ -6,7 +6,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import * as serviceWorker from './serviceWorker';
-import App from 'src/elements/pages/app/App';
+import Main from 'src/elements/pages/main/Main';
 import BaseLayout from 'src/elements/layouts/base/BaseLayout';
 import store from 'src/store/store';
 import history from 'src/history/history';
@@ -29,7 +29,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Router history={history}>
         <Switch>
-          <RouteWithLayout exact path={routes.main} layout={BaseLayout} component={App} />
+          <RouteWithLayout exact path={routes.main} layout={BaseLayout} component={Main} />
         </Switch>
       </Router>
     </Provider>

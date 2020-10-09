@@ -14,7 +14,7 @@ export default function (state: ExampleStore = initialState, action: BaseAction)
     case types.CHANGE_DATA: {
       return {
         ...state,
-        data: 'current core temperature is ' + action.payload.data.core,
+        data: 'current core temperature is ' + action.payload.data.temperature,
       };
     }
     case types.FETCH_DATA: {

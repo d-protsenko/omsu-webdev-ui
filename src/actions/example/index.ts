@@ -6,7 +6,7 @@ export const changeData = (data): BaseAction => ({
   payload: { data },
 });
 
-export const fetchData = ({ min, max, count }): BaseAction => ({
+export const fetchData = (data): BaseAction => ({
   type: types.FETCH_DATA,
-  payload: { min, max, count },
+  payload: { data },
 });

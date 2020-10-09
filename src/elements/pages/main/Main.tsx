@@ -5,7 +5,7 @@ import { ExampleContainer as Example } from 'src/elements/containers/example/Exa
 import logo from 'src/logo.svg';
 import './style.css';
 
-const App: React.FC = () => {
+const Main: React.FC = () => {
   return (
     <div className='App'>
       <img src={logo} className='App-logo' alt='logo' />
@@ -14,4 +14,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Main;

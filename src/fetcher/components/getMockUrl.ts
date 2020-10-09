@@ -1,1 +1,3 @@
-export default (url: string) => `/mockapi/${url}.json`;
+import routesMock from 'src/api/routesMock';
+
+export default (url: string) => `/mockapi/${routesMock[url]}.json`;

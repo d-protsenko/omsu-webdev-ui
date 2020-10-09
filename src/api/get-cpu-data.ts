@@ -1,6 +1,13 @@
 import BaseResponse from 'src/fetcher/interfaces/response';
 import fetch from 'src/fetcher/fetch';
+import routes from './routes';
 
-export const getCPUData = (): Promise<BaseResponse> => {
-  return fetch(`cpu-data`);
+interface CPUData {
+  clock: number;
+  usage: number;
+  temperature: number;
+}
+
+export const getCPUData = (): Promise<BaseResponse<CPUData>> => {
+  return fetch(routes.getCPUInfo);
 };

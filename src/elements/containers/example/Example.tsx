@@ -10,7 +10,7 @@ import Button from 'src/elements/components/buttons/button/Button';
 interface ExampleProps {
   data: string;
   changeData: (data) => BaseAction;
-  fetchData: ({ min, max, count }) => BaseAction;
+  fetchData: (data) => BaseAction;
 }
 
 const Example: React.FC<ExampleProps> = props => {
@@ -24,7 +24,7 @@ const Example: React.FC<ExampleProps> = props => {
           alignContent: 'center',
         }}
       >
-        <Button title='Fetch data' onClick={() => props.fetchData({ min: 0, max: 10, count: 1 })} />
+        <Button title='Fetch data' onClick={() => props.fetchData({})} />
       </div>
     </>
   );

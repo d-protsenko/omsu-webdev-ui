@@ -1,5 +1,7 @@
 {
   "data": {
-    "core": 100
+    "clock": 4800,
+    "usage": 58,
+    "temperature": 55
   }
 }
