@@ -1,51 +1,51 @@
 import { action, makeAutoObservable } from 'mobx';
 
-import { getCPUData } from 'src/api/get-cpu-data';
+import { getRAMData } from 'src/api/get-ram-data';
 
-interface CPUFrame {
+interface RAMFrame {
   x?: number;
   y?: number;
 }
 
-interface CPUData {
+interface RAMData {
   title: string;
   latestUsage: number;
-  cpuData: Array<CPUFrame>;
+  ramData: Array<RAMFrame>;
 }
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max + 1)) + min;
 }
-class CpuDataStore {
+class RamDataStore {
   isLoading: boolean = false;
   counter: number = 0;
-  lines: CPUData = {
+  lines: RAMData = {
     title: '',
     latestUsage: 0,
-    cpuData: [],
+    ramData: [],
   };
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  getCpuInfo() {
+  getRamInfo() {
     this.isLoading = true;
-    getCPUData().then(
+    getRAMData().then(
       action('fetchSuccess', res => {
         this.lines.title = res.data?.usage.toString() as string;
         let tempUsage = getRandomInt(0, 100);
         this.lines.latestUsage = tempUsage;
-        let newCpuData = this.lines.cpuData.map(x => x);
+        let newRamData = this.lines.ramData.map(x => x);
         this.counter++;
-        newCpuData.push({
+        newRamData.push({
           x: this.counter,
-          // y: res.data?.temperature,
+          // y: res.data?.usage,
           y: tempUsage,
         });
-        if (newCpuData.length > 40) {
-          newCpuData.shift();
+        if (newRamData.length > 40) {
+          newRamData.shift();
         }
-        this.lines.cpuData = newCpuData;
+        this.lines.ramData = newRamData;
       }),
       action('fetchError', e => (this.lines.title = 'error'))
     );
@@ -53,5 +53,5 @@ class CpuDataStore {
   }
 }
 
-const CpuStore = new CpuDataStore();
-export default CpuStore;
+const RamStore = new RamDataStore();
+export default RamStore;

@@ -3,11 +3,13 @@ body {
 }
 
 .app {
+    display: flex;
+    flex-direction: column;
     font-family: Roboto, sans-serif;
     min-height: 100vh;
 }
 
 .app__main {
     box-sizing: border-box;
-    padding: 35px;
+    padding: 15px;
 }

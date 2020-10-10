@@ -1,4 +1,5 @@
-.cpu-usage-widget {
+.usage-widget {
+    margin: 80px 20px 0 0;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -7,16 +8,16 @@
     border-radius:15px;
     transition: background-color 0.5s ease-in-out;
 }
-.cpu-bg-red {
+.usage-bg-red {
     background-color: #f7685b;
 }
-.cpu-bg-light {
+.usage-bg-light {
     background-color: aquamarine;
 }
-.cpu-usage-current {
+.usage-current {
     margin: 10px 10px 10px 10px;
 }
 
-.cpu-usage-title {
+.usage-title {
     margin: 10px;
 }
