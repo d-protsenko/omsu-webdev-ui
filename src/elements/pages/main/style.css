@@ -1,15 +1,15 @@
-.App {
+.main {
     display: flex;
     align-items: center;
     flex-direction: column;
     text-align: center;
 }
 
-.App-logo {
+.main-logo {
     height: 40vmin;
 }
 
-.App-header {
+.main-header {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -23,6 +23,11 @@
     font-size: calc(10px + 2vmin);
 }
 
-.App-link {
+.main-link {
     color: #09d3ac;
+}
+
+.responsive-bump {
+    width: 800px;
+    height: 600px;
 }

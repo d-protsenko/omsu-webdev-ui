@@ -1,0 +1,22 @@
+.cpu-usage-widget {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 200px;
+    height: 200px;
+    border-radius:15px;
+    transition: background-color 0.5s ease-in-out;
+}
+.cpu-bg-red {
+    background-color: #f7685b;
+}
+.cpu-bg-light {
+    background-color: aquamarine;
+}
+.cpu-usage-current {
+    margin: 10px 10px 10px 10px;
+}
+
+.cpu-usage-title {
+    margin: 10px;
+}

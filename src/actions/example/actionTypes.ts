@@ -1,4 +1,0 @@
-export const actionTypes = {
-  CHANGE_DATA: 'CHANGE_TEMPLATE_DATA',
-  FETCH_DATA: 'GENERATE_TEMPLATE_DATA',
-};

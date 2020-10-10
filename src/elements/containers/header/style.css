@@ -9,31 +9,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
 }
 
-.header__nav {
-    margin-left: 95px;
-}
-
-.nav__list {
-    display: flex;
-
-    margin: 0;
-    padding: 0;
-
-    list-style: none;
-}
-
-.nav__item + .nav__item {
-    margin-left: 28px;
-}
-
-.nav__link {
-    text-decoration: none;
-
-    color: #192a3e;
-
-    font-size: 16px;
-}
-
-.nav__link_active {
-    font-weight: 500;
+.header-title {
+    color: #9631ac;
+    margin: 10px;
 }
