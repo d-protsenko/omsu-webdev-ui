@@ -32,6 +32,7 @@ class RamDataStore {
   addRamDataManually(usage: number) {
     let newRamData = this.lines.ramData.map(x => x);
     this.counter++;
+    LoggerStore.addMessageToLogs(`Manually added RAM usage info: ${usage}`);
     newRamData.push({
       x: this.counter,
       y: usage,

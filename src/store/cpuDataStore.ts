@@ -32,6 +32,7 @@ class CpuDataStore {
   addCpuDataManually(usage: number) {
     let newCpuData = this.lines.cpuData.map(x => x);
     this.counter++;
+    LoggerStore.addMessageToLogs(`Manually added CPU usage info: ${usage}`);
     newCpuData.push({
       x: this.counter,
       y: usage,
