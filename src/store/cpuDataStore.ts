@@ -1,6 +1,7 @@
 import { action, makeAutoObservable } from 'mobx';
 
 import { getCPUData } from 'src/api/get-cpu-data';
+import LoggerStore from 'src/store/loggerDataStore';
 
 interface CPUFrame {
   x?: number;
@@ -28,6 +29,20 @@ class CpuDataStore {
     makeAutoObservable(this);
   }
 
+  addCpuDataManually(usage: number) {
+    let newCpuData = this.lines.cpuData.map(x => x);
+    this.counter++;
+    newCpuData.push({
+      x: this.counter,
+      y: usage,
+    });
+    if (newCpuData.length > 40) {
+      newCpuData.shift();
+    }
+    this.lines.cpuData = newCpuData;
+    this.lines.latestUsage = usage;
+  }
+
   getCpuInfo() {
     this.isLoading = true;
     getCPUData().then(
@@ -35,6 +50,7 @@ class CpuDataStore {
         this.lines.title = res.data?.usage.toString() as string;
         let tempUsage = getRandomInt(0, 100);
         this.lines.latestUsage = tempUsage;
+        LoggerStore.addMessageToLogs(`Fetched latest CPU usage info: ${tempUsage}`);
         let newCpuData = this.lines.cpuData.map(x => x);
         this.counter++;
         newCpuData.push({

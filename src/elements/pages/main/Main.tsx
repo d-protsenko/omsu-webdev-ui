@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 
 import UsageWidget from 'src/elements/components/usageWidget/usageWidget';
@@ -9,19 +9,49 @@ import CpuStore from 'src/store/cpuDataStore';
 import RamStore from 'src/store/ramDataStore';
 
 import './style.css';
+import { makeStyles } from '@material-ui/core/styles';
+import LogsTable from 'src/elements/components/LogsTable/LogsTable';
+import LoggerStore from 'src/store/loggerDataStore';
+import { FormControl } from '@material-ui/core';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%',
+  },
+  container: {
+    maxHeight: 440,
+  },
+  button: {
+    display: 'block',
+    marginTop: theme.spacing(2),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+}));
 
 const Main = observer(props => {
   useEffect(() => {
     const interval = setInterval(() => {
+      LoggerStore.addMessageToLogs('Getting latest CPU usage info...');
       CpuStore.getCpuInfo();
+      LoggerStore.addMessageToLogs('Getting latest RAM usage info...');
       RamStore.getRamInfo();
-    }, 1000);
+    }, 5000);
     return () => {
       clearInterval(interval);
     };
   }, []);
   const { lines: cpuLines } = CpuStore;
   const { lines: ramLines } = RamStore;
+  const { latestLogs } = LoggerStore;
   const getCPULinesData = () => {
     return [
       {
@@ -40,11 +70,52 @@ const Main = observer(props => {
       },
     ];
   };
-
+  const [usage, setUsage] = useState('');
+  const [usageType, setUsageType] = useState('');
+  const [open, setOpen] = React.useState(false);
+  const submitSideMenuForm = () => {
+    if (usageType === 'cpu') {
+      CpuStore.addCpuDataManually(Number(usage));
+    } else {
+      RamStore.addRamDataManually(Number(usage));
+    }
+  };
+  const classes = useStyles();
   return (
     <div className='main'>
-      <Aside className='main__aside' title={'Aside menu'}>
-        {}
+      <Aside className='main__aside' title={'Manual add'}>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor='open-select'>Select type of usage</InputLabel>
+          <Select
+            labelId='open-select-label'
+            id='open-select'
+            open={open}
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+            value={usageType}
+            onChange={event => setUsageType(event.target.value as string)}
+          >
+            <MenuItem value=''>
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={'cpu'}>CPU</MenuItem>
+            <MenuItem value={'ram'}>RAM</MenuItem>
+          </Select>
+          <FormHelperText id='type-helper-text'>Select type of usage to add.</FormHelperText>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor='usage-input'>Type usage</InputLabel>
+          <Input
+            id='usage-input'
+            aria-describedby='data-helper-text'
+            value={usage}
+            onChange={event => setUsage(event.target.value as string)}
+          />
+          <FormHelperText id='data-helper-text'>Input value for usage to add.</FormHelperText>
+          <Button variant='contained' className={classes.button} onClick={submitSideMenuForm}>
+            Submit
+          </Button>
+        </FormControl>
       </Aside>
       <div className={'charts-wrapper'}>
         <div className={'chart-usage-wrapper'}>
@@ -56,6 +127,7 @@ const Main = observer(props => {
           <UsageWidget usage={ramLines.latestUsage} title={'RAM'} />
         </div>
       </div>
+      <LogsTable classes={classes} rows={latestLogs} />
     </div>
   );
 });

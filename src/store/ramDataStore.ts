@@ -1,6 +1,7 @@
 import { action, makeAutoObservable } from 'mobx';
 
 import { getRAMData } from 'src/api/get-ram-data';
+import LoggerStore from 'src/store/loggerDataStore';
 
 interface RAMFrame {
   x?: number;
@@ -28,6 +29,20 @@ class RamDataStore {
     makeAutoObservable(this);
   }
 
+  addRamDataManually(usage: number) {
+    let newRamData = this.lines.ramData.map(x => x);
+    this.counter++;
+    newRamData.push({
+      x: this.counter,
+      y: usage,
+    });
+    if (newRamData.length > 40) {
+      newRamData.shift();
+    }
+    this.lines.ramData = newRamData;
+    this.lines.latestUsage = usage;
+  }
+
   getRamInfo() {
     this.isLoading = true;
     getRAMData().then(
@@ -35,6 +50,7 @@ class RamDataStore {
         this.lines.title = res.data?.usage.toString() as string;
         let tempUsage = getRandomInt(0, 100);
         this.lines.latestUsage = tempUsage;
+        LoggerStore.addMessageToLogs(`Fetched latest RAM usage info: ${tempUsage}`);
         let newRamData = this.lines.ramData.map(x => x);
         this.counter++;
         newRamData.push({
