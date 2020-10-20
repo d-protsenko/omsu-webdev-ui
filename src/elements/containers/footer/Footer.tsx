@@ -10,7 +10,7 @@ export interface Props {
 const Footer: React.FC<Props> = ({ className }) => {
   return (
     <footer className={classNames('footer', className)}>
-      <h1 className='footer-info'>© Excy, 2020</h1>
+      <h1 className='footer-info'>Danil Protsenko</h1>
     </footer>
   );
 };

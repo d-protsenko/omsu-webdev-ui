@@ -2,9 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-
     cursor: pointer;
-
     color: #000;
     border: none;
     background-color: initial;
@@ -12,6 +10,5 @@
 
 .action-view:disabled {
     pointer-events: none;
-
     opacity: 0.3;
 }

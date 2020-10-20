@@ -7,7 +7,7 @@ const ResponsiveLineChart = ({ data }) => {
     <div className={'responsive-line'}>
       <ResponsiveLine
         data={data}
-        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+        margin={{ top: 50, right: 110, bottom: 100, left: 60 }}
         xScale={{ type: 'point' }}
         yScale={{ type: 'linear', min: 0, max: 100, stacked: true, reverse: false }}
         curve='cardinal'
@@ -18,9 +18,9 @@ const ResponsiveLineChart = ({ data }) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: -45,
-          legend: 'time point',
-          legendOffset: 36,
-          legendPosition: 'middle',
+          // legend: 'time point',
+          // legendOffset: 36,
+          // legendPosition: 'middle',
         }}
         axisLeft={{
           orient: 'left',
