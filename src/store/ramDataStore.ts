@@ -1,10 +1,13 @@
 import { action, makeAutoObservable } from 'mobx';
+import { DateTime } from 'luxon';
 
 import { getRAMData } from 'src/api/get-ram-data';
 import LoggerStore from 'src/store/loggerDataStore';
 
+const zone = 'Europe/Moscow';
+
 interface RAMFrame {
-  x?: number;
+  x?: string;
   y?: number;
 }
 
@@ -13,9 +16,7 @@ interface RAMData {
   latestUsage: number;
   ramData: Array<RAMFrame>;
 }
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max + 1)) + min;
-}
+
 class RamDataStore {
   isLoading: boolean = false;
   counter: number = 0;
@@ -34,6 +35,7 @@ class RamDataStore {
     this.counter++;
     LoggerStore.addMessageToLogs(`Manually added RAM usage info: ${usage}`);
     newRamData.push({
+      // @ts-ignore
       x: this.counter,
       y: usage,
     });
@@ -48,20 +50,32 @@ class RamDataStore {
     this.isLoading = true;
     getRAMData().then(
       action('fetchSuccess', res => {
-        this.lines.title = res.data?.usage.toString() as string;
-        let tempUsage = getRandomInt(0, 100);
-        this.lines.latestUsage = tempUsage;
-        LoggerStore.addMessageToLogs(`Fetched latest RAM usage info: ${tempUsage}`);
+        if (res.content?.length === 0) return;
+        let latestUsage = res.content[res.content?.length - 1].used?.toPrecision(2);
+        this.lines.latestUsage = latestUsage;
+        this.lines.title = latestUsage?.toString() as string;
+        LoggerStore.addMessageToLogs(
+          `Fetched latest RAM usage info: ${latestUsage}, total fetched size ${res.content.length}`
+        );
         let newRamData = this.lines.ramData.map(x => x);
         this.counter++;
-        newRamData.push({
-          x: this.counter,
-          // y: res.data?.usage,
-          y: tempUsage,
+        res.content?.forEach(item => {
+          let updatedAt = DateTime.fromISO(item.updatedAt).setZone(zone);
+          updatedAt = `${updatedAt.toLocaleString(DateTime.DATE_SHORT)} ${updatedAt.toLocaleString(
+            DateTime.TIME_24_WITH_SECONDS
+          )}`;
+          if (newRamData.find(x => x.x === updatedAt) === undefined) {
+            newRamData.push({
+              x: updatedAt,
+              y: item.used?.toPrecision(2),
+            });
+          }
         });
         if (newRamData.length > 40) {
           newRamData.shift();
         }
+        //@ts-ignore
+        newRamData.sort((x, y) => x.x?.localeCompare(y.x));
         this.lines.ramData = newRamData;
       }),
       action('fetchError', e => (this.lines.title = 'error'))

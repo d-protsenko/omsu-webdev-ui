@@ -1,7 +1,10 @@
 import { action, makeAutoObservable } from 'mobx';
+import { DateTime } from 'luxon';
 
 import { getCPUData } from 'src/api/get-cpu-data';
 import LoggerStore from 'src/store/loggerDataStore';
+
+const zone = 'Europe/Moscow';
 
 interface CPUFrame {
   x?: number;
@@ -13,9 +16,7 @@ interface CPUData {
   latestUsage: number;
   cpuData: Array<CPUFrame>;
 }
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max + 1)) + min;
-}
+
 class CpuDataStore {
   isLoading: boolean = false;
   counter: number = 0;
@@ -48,20 +49,32 @@ class CpuDataStore {
     this.isLoading = true;
     getCPUData().then(
       action('fetchSuccess', res => {
-        this.lines.title = res.data?.usage.toString() as string;
-        let tempUsage = getRandomInt(0, 100);
-        this.lines.latestUsage = tempUsage;
-        LoggerStore.addMessageToLogs(`Fetched latest CPU usage info: ${tempUsage}`);
+        if (res.content?.length === 0) return;
+        let latestUsage = res.content[res.content?.length - 1].cpuUsage?.toPrecision(2);
+        this.lines.latestUsage = latestUsage;
+        this.lines.title = latestUsage?.toString() as string;
+        LoggerStore.addMessageToLogs(
+          `Fetched latest CPU usage info: ${latestUsage}, total fetched size ${res.content.length}`
+        );
         let newCpuData = this.lines.cpuData.map(x => x);
         this.counter++;
-        newCpuData.push({
-          x: this.counter,
-          // y: res.data?.temperature,
-          y: tempUsage,
+        res.content?.forEach(item => {
+          let updatedAt = DateTime.fromISO(item.updatedAt).setZone(zone);
+          updatedAt = `${updatedAt.toLocaleString(DateTime.DATE_SHORT)} ${updatedAt.toLocaleString(
+            DateTime.TIME_24_WITH_SECONDS
+          )}`;
+          if (newCpuData.find(x => x.x === updatedAt) === undefined) {
+            newCpuData.push({
+              x: updatedAt,
+              y: item.cpuUsage?.toPrecision(2),
+            });
+          }
         });
         if (newCpuData.length > 40) {
           newCpuData.shift();
         }
+        //@ts-ignore
+        newCpuData.sort((x, y) => x.x?.localeCompare(y.x));
         this.lines.cpuData = newCpuData;
       }),
       action('fetchError', e => (this.lines.title = 'error'))
