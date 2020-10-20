@@ -1,7 +1,11 @@
 {
-  "data": {
-    "clock": 4800,
-    "usage": 58,
-    "temperature": 55
-  }
+  "content": [
+    {
+      "data": {
+        "clock": 4800,
+        "cpuUsage": 58,
+        "temperature": 55
+      }
+    }
+  ]
 }

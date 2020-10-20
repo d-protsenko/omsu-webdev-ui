@@ -1,5 +1,12 @@
 {
-  "data": {
-    "usage": 58
-  }
+  "content": [
+    {
+      "id": "id",
+      "total": 100,
+      "available": 100,
+      "free": 100,
+      "used": 38.05,
+      "updatedAt": "date"
+    }
+  ]
 }
