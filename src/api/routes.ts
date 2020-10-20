@@ -1,5 +1,5 @@
 export default {
-  getCPUInfo: '/sensors/cpu',
-  getRAMInfo: '/sensors/ram',
-  getLoggingData: '/logs/latest',
+  getCPUInfo: '/api/sensors/cpu',
+  getRAMInfo: '/api/sensors/ram',
+  getLoggingData: '/api/logs/latest',
 };
