@@ -1,13 +1,13 @@
 import { action, makeAutoObservable } from 'mobx';
 import { DateTime } from 'luxon';
 
-import { getCPUData } from 'src/api/get-cpu-data';
-import LoggerStore from 'src/store/loggerDataStore';
+import { getCPUData } from 'src/api/cpu/get-cpu-data';
+import { createCPUData } from 'src/api/cpu/create-cpu-data';
 
 const zone = 'Europe/Moscow';
 
 interface CPUFrame {
-  x?: number;
+  x?: string;
   y?: number;
 }
 
@@ -31,18 +31,28 @@ class CpuDataStore {
   }
 
   addCpuDataManually(usage: number) {
-    let newCpuData = this.lines.cpuData.map(x => x);
-    this.counter++;
-    LoggerStore.addMessageToLogs(`Manually added CPU usage info: ${usage}`);
-    newCpuData.push({
-      x: this.counter,
-      y: usage,
-    });
-    if (newCpuData.length > 40) {
-      newCpuData.shift();
-    }
-    this.lines.cpuData = newCpuData;
-    this.lines.latestUsage = usage;
+    createCPUData({
+      cpuUsage: usage,
+      updatedAt: DateTime.local().toUTC().toISO(),
+    }).then(
+      action('fetchSuccess', res => {
+        let newCpuData = this.lines.cpuData.map(x => x);
+        let updatedAt = DateTime.fromISO(res.updatedAt).setZone(zone);
+        updatedAt = `${updatedAt.toLocaleString(DateTime.DATE_SHORT)} ${updatedAt.toLocaleString(
+          DateTime.TIME_24_WITH_SECONDS
+        )}`;
+        newCpuData.push({
+          x: updatedAt,
+          y: res.cpuUsage,
+        });
+        if (newCpuData.length > 40) {
+          newCpuData.shift();
+        }
+        this.lines.cpuData = newCpuData;
+        this.lines.latestUsage = usage;
+      }),
+      action('fetchError', e => (this.lines.title = 'error'))
+    );
   }
 
   getCpuInfo() {
@@ -53,9 +63,6 @@ class CpuDataStore {
         let latestUsage = res.content[res.content?.length - 1].cpuUsage?.toPrecision(2);
         this.lines.latestUsage = latestUsage;
         this.lines.title = latestUsage?.toString() as string;
-        LoggerStore.addMessageToLogs(
-          `Fetched latest CPU usage info: ${latestUsage}, total fetched size ${res.content.length}`
-        );
         let newCpuData = this.lines.cpuData.map(x => x);
         this.counter++;
         res.content?.forEach(item => {
@@ -71,7 +78,7 @@ class CpuDataStore {
           }
         });
         if (newCpuData.length > 40) {
-          newCpuData.shift();
+          newCpuData.splice(40, newCpuData.length - 40);
         }
         //@ts-ignore
         newCpuData.sort((x, y) => x.x?.localeCompare(y.x));

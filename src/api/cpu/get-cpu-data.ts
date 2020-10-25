@@ -1,5 +1,5 @@
 import fetch from 'src/fetcher/fetch';
-import routes from './routes';
+import routes from 'src/api/routes';
 import { PagedResponse } from 'src/fetcher/interfaces/response';
 
 interface CpuResponse {

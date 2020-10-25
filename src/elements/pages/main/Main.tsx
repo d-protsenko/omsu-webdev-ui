@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
+import { DateTime } from 'luxon';
 
 import UsageWidget from 'src/elements/components/usageWidget/usageWidget';
 import ResponsiveLineChart from 'src/elements/components/lineChart/ResponsiveLineChart';
@@ -39,12 +40,24 @@ const useStyles = makeStyles(theme => ({
 
 const Main = observer(props => {
   useEffect(() => {
+    let sinceDayAgo = DateTime.local().minus({ days: 5 });
+    LoggerStore.initLoggingInfo(sinceDayAgo.toUTC().toISO());
+    let since = DateTime.local();
     const interval = setInterval(() => {
-      LoggerStore.addMessageToLogs('Getting latest CPU usage info...');
+      LoggerStore.getLoggingInfo(100, 0, since.toUTC().toISO());
+      since = DateTime.local();
+    }, 3000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  useEffect(() => {
+    CpuStore.getCpuInfo();
+    RamStore.getRamInfo();
+    const interval = setInterval(() => {
       CpuStore.getCpuInfo();
-      LoggerStore.addMessageToLogs('Getting latest RAM usage info...');
       RamStore.getRamInfo();
-    }, 5000);
+    }, 30000);
     return () => {
       clearInterval(interval);
     };

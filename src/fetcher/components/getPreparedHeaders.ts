@@ -1,3 +1,6 @@
 export default (headers: object = {}) => {
-  return new Headers({ ...headers });
+  return new Headers({
+    'Content-type': 'application/json',
+    ...headers,
+  });
 };

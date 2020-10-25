@@ -6,10 +6,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import React from 'react';
+import './style.css';
 
 interface Log {
-  number: string;
-  timepoint: string;
+  id?: string;
+  updatedAt: string;
   message: string;
 }
 
@@ -23,19 +24,19 @@ const LogsTable: React.FC<Props> = ({ classes, rows }) => (
     <Table stickyHeader aria-label='sticky table'>
       <TableHead>
         <TableRow>
-          <TableCell width={'20px'}>#</TableCell>
+          {/*<TableCell width={'20px'}>#</TableCell>*/}
           <TableCell width={'100px'}>Time point</TableCell>
           <TableCell align='left'>Log message</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {rows.map(row => (
-          <TableRow key={row.timepoint}>
+          <TableRow key={row.id}>
+            {/*<TableCell component='th' scope='row'>*/}
+            {/*  {row.id}*/}
+            {/*</TableCell>*/}
             <TableCell component='th' scope='row'>
-              {row.number}
-            </TableCell>
-            <TableCell component='th' scope='row'>
-              {row.timepoint}
+              {row.updatedAt}
             </TableCell>
             <TableCell align='left'>{row.message}</TableCell>
           </TableRow>

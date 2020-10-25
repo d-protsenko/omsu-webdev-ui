@@ -1,8 +1,8 @@
 import { action, makeAutoObservable } from 'mobx';
 import { DateTime } from 'luxon';
-
-import { getRAMData } from 'src/api/get-ram-data';
-import LoggerStore from 'src/store/loggerDataStore';
+import { getRAMData } from 'src/api/ram/get-ram-data';
+import { createRAMData } from 'src/api/ram/create-ram-data';
+import { createCPUData } from 'src/api/cpu/create-cpu-data';
 
 const zone = 'Europe/Moscow';
 
@@ -31,19 +31,28 @@ class RamDataStore {
   }
 
   addRamDataManually(usage: number) {
-    let newRamData = this.lines.ramData.map(x => x);
-    this.counter++;
-    LoggerStore.addMessageToLogs(`Manually added RAM usage info: ${usage}`);
-    newRamData.push({
-      // @ts-ignore
-      x: this.counter,
-      y: usage,
-    });
-    if (newRamData.length > 40) {
-      newRamData.shift();
-    }
-    this.lines.ramData = newRamData;
-    this.lines.latestUsage = usage;
+    createRAMData({
+      used: usage,
+      updatedAt: DateTime.local().toUTC().toISO(),
+    }).then(
+      action('fetchSuccess', res => {
+        let newRamData = this.lines.ramData.map(x => x);
+        let updatedAt = DateTime.fromISO(res.updatedAt).setZone(zone);
+        updatedAt = `${updatedAt.toLocaleString(DateTime.DATE_SHORT)} ${updatedAt.toLocaleString(
+          DateTime.TIME_24_WITH_SECONDS
+        )}`;
+        newRamData.push({
+          x: updatedAt,
+          y: res.used,
+        });
+        if (newRamData.length > 40) {
+          newRamData.shift();
+        }
+        this.lines.ramData = newRamData;
+        this.lines.latestUsage = usage;
+      }),
+      action('fetchError', e => (this.lines.title = 'error'))
+    );
   }
 
   getRamInfo() {
@@ -54,9 +63,9 @@ class RamDataStore {
         let latestUsage = res.content[res.content?.length - 1].used?.toPrecision(2);
         this.lines.latestUsage = latestUsage;
         this.lines.title = latestUsage?.toString() as string;
-        LoggerStore.addMessageToLogs(
-          `Fetched latest RAM usage info: ${latestUsage}, total fetched size ${res.content.length}`
-        );
+        // LoggerStore.addMessageToLogs(
+        //   `Fetched latest RAM usage info: ${latestUsage}, total fetched size ${res.content.length}`
+        // );
         let newRamData = this.lines.ramData.map(x => x);
         this.counter++;
         res.content?.forEach(item => {
