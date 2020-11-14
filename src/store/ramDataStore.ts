@@ -60,31 +60,22 @@ class RamDataStore {
     getRAMData().then(
       action('fetchSuccess', res => {
         if (res.content?.length === 0) return;
-        let latestUsage = res.content[res.content?.length - 1].used?.toPrecision(2);
-        this.lines.latestUsage = latestUsage;
-        this.lines.title = latestUsage?.toString() as string;
-        // LoggerStore.addMessageToLogs(
-        //   `Fetched latest RAM usage info: ${latestUsage}, total fetched size ${res.content.length}`
-        // );
-        let newRamData = this.lines.ramData.map(x => x);
+        let newRamData: Array<RAMFrame> = [];
         this.counter++;
         res.content?.forEach(item => {
           let updatedAt = DateTime.fromISO(item.updatedAt).setZone(zone);
           updatedAt = `${updatedAt.toLocaleString(DateTime.DATE_SHORT)} ${updatedAt.toLocaleString(
             DateTime.TIME_24_WITH_SECONDS
           )}`;
-          if (newRamData.find(x => x.x === updatedAt) === undefined) {
-            newRamData.push({
-              x: updatedAt,
-              y: item.used?.toPrecision(2),
-            });
-          }
+          newRamData.push({
+            x: updatedAt,
+            y: item.used?.toPrecision(3),
+          });
         });
-        if (newRamData.length > 40) {
-          newRamData.shift();
-        }
         //@ts-ignore
         newRamData.sort((x, y) => x.x?.localeCompare(y.x));
+        this.lines.latestUsage = newRamData[newRamData.length - 1].y!!;
+        this.lines.title = String(this.lines.latestUsage);
         this.lines.ramData = newRamData;
       }),
       action('fetchError', e => (this.lines.title = 'error'))

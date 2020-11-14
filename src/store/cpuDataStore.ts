@@ -60,28 +60,22 @@ class CpuDataStore {
     getCPUData().then(
       action('fetchSuccess', res => {
         if (res.content?.length === 0) return;
-        let latestUsage = res.content[res.content?.length - 1].cpuUsage?.toPrecision(2);
-        this.lines.latestUsage = latestUsage;
-        this.lines.title = latestUsage?.toString() as string;
-        let newCpuData = this.lines.cpuData.map(x => x);
+        let newCpuData: Array<CPUFrame> = [];
         this.counter++;
         res.content?.forEach(item => {
           let updatedAt = DateTime.fromISO(item.updatedAt).setZone(zone);
           updatedAt = `${updatedAt.toLocaleString(DateTime.DATE_SHORT)} ${updatedAt.toLocaleString(
             DateTime.TIME_24_WITH_SECONDS
           )}`;
-          if (newCpuData.find(x => x.x === updatedAt) === undefined) {
-            newCpuData.push({
-              x: updatedAt,
-              y: item.cpuUsage?.toPrecision(2),
-            });
-          }
+          newCpuData.push({
+            x: updatedAt,
+            y: item.cpuUsage?.toPrecision(3),
+          });
         });
-        if (newCpuData.length > 40) {
-          newCpuData.splice(40, newCpuData.length - 40);
-        }
         //@ts-ignore
         newCpuData.sort((x, y) => x.x?.localeCompare(y.x));
+        this.lines.latestUsage = newCpuData[newCpuData.length - 1].y!!;
+        this.lines.title = String(this.lines.latestUsage);
         this.lines.cpuData = newCpuData;
       }),
       action('fetchError', e => (this.lines.title = 'error'))

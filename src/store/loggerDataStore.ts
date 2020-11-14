@@ -62,7 +62,7 @@ class LoggerDataStore {
           }
         });
         if (newLogs.length > this.maximumLogs) {
-          newLogs.splice(this.maximumLogs, this.maximumLogs - newLogs.length);
+          newLogs.splice(0, newLogs.length - this.maximumLogs);
         }
         this.latestLogs = newLogs;
       }),
