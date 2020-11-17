@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DateTime } from 'luxon';
+import classNames from 'classnames';
 
 import UsageWidget from 'src/elements/components/usageWidget/usageWidget';
 import ResponsiveLineChart from 'src/elements/components/lineChart/ResponsiveLineChart';
@@ -99,6 +100,7 @@ const Main = observer(props => {
       <Aside className='main__aside' title={'Manual add'}>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor='open-select'>Select type of usage</InputLabel>
+
           <Select
             labelId='open-select-label'
             id='open-select'
@@ -114,6 +116,18 @@ const Main = observer(props => {
             <MenuItem value={'cpu'}>CPU</MenuItem>
             <MenuItem value={'ram'}>RAM</MenuItem>
           </Select>
+          <select
+            id='open-select-hidden'
+            style={{
+              display: 'none',
+            }}
+            value={usageType}
+            onChange={event => setUsageType(event.target.value as string)}
+          >
+            <option value=''>None</option>
+            <option value='cpu'>CPU</option>
+            <option value='ram'>RAM</option>
+          </select>
           <FormHelperText id='type-helper-text'>Select type of usage to add.</FormHelperText>
         </FormControl>
         <FormControl className={classes.formControl}>
@@ -125,7 +139,12 @@ const Main = observer(props => {
             onChange={event => setUsage(event.target.value as string)}
           />
           <FormHelperText id='data-helper-text'>Input value for usage to add.</FormHelperText>
-          <Button variant='contained' className={classes.button} onClick={submitSideMenuForm}>
+          <Button
+            variant='contained'
+            id={'submit-button'}
+            className={classNames(classes.button, 'aside__button')}
+            onClick={submitSideMenuForm}
+          >
             Submit
           </Button>
         </FormControl>
